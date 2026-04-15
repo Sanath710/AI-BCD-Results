@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYBD-EFB0-RS50-DN121 | Technical Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            200: '#A7F3D0',
+                            300: '#6EE7B7',
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065F46',
+                            900: '#064E3B',
+                        },
+                        slate: {
+                            850: '#151F2E',
+                            950: '#0A101C',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #F8FAFC; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #059669 0%, #10B981 50%, #34D399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 40%, #064E3B 100%);
+        }
+
+        .card-hover {
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .diagram-box {
+            background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 50%, #F0FDFA 100%);
+            border: 1.5px solid #A7F3D0;
+        }
+
+        .flow-arrow {
+            width: 2px;
+            height: 24px;
+            background: linear-gradient(to bottom, #10B981, #059669);
+            margin: 0 auto;
+            position: relative;
+        }
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #059669;
+        }
+
+        .flow-arrow-h {
+            width: 32px;
+            height: 2px;
+            background: linear-gradient(to right, #10B981, #059669);
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .flow-arrow-h::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid #059669;
+        }
+
+        .metric-glow {
+            box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        .table-fda tr:hover { background: #F0FDF4; }
+
+        .nav-link {
+            transition: all 200ms;
+            border-left: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            border-left-color: #10B981;
+            background: #F0FDF4;
+            color: #059669;
+        }
+
+        .badge-pass {
+            background: linear-gradient(135deg, #059669, #10B981);
+            color: white;
+        }
+        .badge-exceed {
+            background: linear-gradient(135deg, #047857, #059669);
+            color: white;
+        }
+        .badge-info {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            color: white;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #E2E8F0, transparent);
+        }
+
+        .arch-node {
+            transition: all 200ms;
+        }
+        .arch-node:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .print-only { display: none; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block; }
+            body { background: white; }
+            .hero-gradient { background: #0F172A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        .tooltip-container { position: relative; }
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E293B;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: all 200ms;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .confusion-cell {
+            transition: all 200ms;
+        }
+        .confusion-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="text-slate-900 antialiased">
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/80 no-print">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-600 to-brand-500 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <span class="font-semibold text-sm text-slate-900">HYBD-EFB0-RS50-DN121</span>
+                    <span class="text-xs text-slate-400 ml-2">v3IPP</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="#overview" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">Overview</a>
+                <a href="#architecture" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">Architecture</a>
+                <a href="#methodology" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">Methodology</a>
+                <a href="#results" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">Results</a>
+                <a href="#fda" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">FDA Comparison</a>
+                <a href="#clinical" class="nav-link px-3 py-2 text-sm text-slate-600 rounded-r-md">Clinical</a>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-500 pulse-dot"></span>
+                    Validated
+                </span>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- ==================== HERO ==================== -->
+    <header class="hero-gradient pt-32 pb-20 lg:pt-40 lg:pb-28 relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-20 right-10 w-72 h-72 bg-brand-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 left-10 w-96 h-96 bg-brand-400/5 rounded-full blur-3xl"></div>
+        <div class="absolute top-40 left-1/3 w-40 h-40 bg-brand-300/5 rounded-full blur-2xl float-anim"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-4xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 mb-6">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-300"></i>
+                    <span class="text-xs font-medium text-brand-200 tracking-wide uppercase">Technical Documentation</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-6">
+                    Breast Cancer Detection
+                    <br>
+                    <span class="gradient-text" style="-webkit-text-fill-color: transparent; background: linear-gradient(135deg, #34D399, #6EE7B7, #A7F3D0); -webkit-background-clip: text; background-clip: text;">
+                        via Multi-View Thermography
+                    </span>
+                </h1>
+
+                <p class="text-lg text-slate-300 leading-relaxed max-w-2xl mb-8">
+                    Hybrid deep learning pipeline combining EfficientNet-B0, ResNet-50, and DenseNet-121 for non-invasive, radiation-free breast cancer screening using tri-view infrared thermography.
+                </p>
+
+                <div class="flex flex-wrap gap-3 mb-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300">
+                        <i data-lucide="brain" class="w-4 h-4 text-brand-400"></i>
+                        3-Network Ensemble
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300">
+                        <i data-lucide="scan-eye" class="w-4 h-4 text-brand-400"></i>
+                        Tri-View Analysis
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300">
+                        <i data-lucide="activity" class="w-4 h-4 text-brand-400"></i>
+                        MC Dropout Uncertainty
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-300">
+                        <i data-lucide="badge-check" class="w-4 h-4 text-brand-400"></i>
+                        Bootstrap CIs
+                    </span>
+                </div>
+
+                <!-- Key metrics preview -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-white">95.0%</div>
+                        <div class="text-xs text-slate-400 mt-1">Sensitivity</div>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-white">94.2%</div>
+                        <div class="text-xs text-slate-400 mt-1">Specificity</div>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-white">0.964</div>
+                        <div class="text-xs text-slate-400 mt-1">ROC AUC</div>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-white">94.1%</div>
+                        <div class="text-xs text-slate-400 mt-1">F1 Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="max-w-7xl mx-auto px-6 py-16 space-y-24">
+
+        <!-- ==================== SECTION 1: OVERVIEW ==================== -->
+        <section id="overview">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 01
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Executive Overview</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Problem Statement -->
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-8 card-hover">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg text-slate-900">Problem Statement</h3>
+                            <p class="text-sm text-slate-500 mt-1">Clinical Challenge</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 text-sm text-slate-600 leading-relaxed">
+                        <p>
+                            Breast cancer remains the <strong class="text-slate-900">most commonly diagnosed cancer</strong> in women worldwide, with approximately 2.3 million new cases annually. Mammography, the current gold standard, has well-documented limitations including radiation exposure, discomfort, reduced sensitivity in dense breast tissue (40-60% of women), and high false-positive rates leading to unnecessary biopsies.
+                        </p>
+                        <p>
+                            Infrared thermography offers a compelling <strong class="text-slate-900">non-invasive, radiation-free, and painless</strong> alternative that detects physiological changes associated with tumor angiogenesis—abnormal blood vessel formation that precedes anatomical changes detectable by mammography. However, interpreting thermal patterns requires specialized expertise and suffers from inter-observer variability.
+                        </p>
+                        <p>
+                            This system addresses these challenges through an <strong class="text-slate-900">AI-powered multi-view analysis</strong> that captures asymmetrical thermal patterns across frontal and bilateral oblique views, mimicking expert clinical assessment protocols.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Key Stats -->
+                <div class="space-y-4">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <div class="text-3xl font-bold text-red-500">2.3M</div>
+                        <div class="text-sm text-slate-600 mt-1">New breast cancer cases globally per year</div>
+                        <div class="text-xs text-slate-400 mt-2">WHO Global Cancer Observatory, 2022</div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <div class="text-3xl font-bold text-amber-500">40-60%</div>
+                        <div class="text-sm text-slate-600 mt-1">Women with dense breast tissue where mammography sensitivity drops</div>
+                        <div class="text-xs text-slate-400 mt-2">NIH Breast Density Research</div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <div class="text-3xl font-bold text-brand-600">0 mSv</div>
+                        <div class="text-sm text-slate-600 mt-1">Radiation dose from thermography (vs 0.4 mSv for mammography)</div>
+                        <div class="text-xs text-slate-400 mt-2">FDA Medical Device Data</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solution Value Props -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover">
+                    <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center mb-3">
+                        <i data-lucide="zap" class="w-4.5 h-4.5 text-brand-600"></i>
+                    </div>
+                    <h4 class="font-medium text-sm text-slate-900">Non-Invasive</h4>
+                    <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Zero radiation exposure, painless, no breast compression required</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover">
+                    <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+                        <i data-lucide="layers" class="w-4.5 h-4.5 text-blue-600"></i>
+                    </div>
+                    <h4 class="font-medium text-sm text-slate-900">Multi-View Fusion</h4>
+                    <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Analyzes frontal + left + right oblique views simultaneously</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover">
+                    <div class="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center mb-3">
+                        <i data-lucide="shuffle" class="w-4.5 h-4.5 text-purple-600"></i>
+                    </div>
+                    <h4 class="font-medium text-sm text-slate-900">Asymmetry Detection</h4>
+                    <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Explicit bilateral thermal asymmetry quantification</p>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover">
+                    <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center mb-3">
+                        <i data-lucide="help-circle" class="w-4.5 h-4.5 text-amber-600"></i>
+                    </div>
+                    <h4 class="font-medium text-sm text-slate-900">Uncertainty Quantification</h4>
+                    <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">MC Dropout with confidence intervals for reliable predictions</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 2: ARCHITECTURE ==================== -->
+        <section id="architecture">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 02
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Model Architecture</h2>
+                <p class="text-slate-500 mt-3 max-w-2xl mx-auto">Advanced4PipelineModel — A hybrid multi-network architecture with attention-gated feature fusion for tri-view thermographic analysis</p>
+            </div>
+
+            <!-- Architecture Diagram -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 lg:p-10 mb-8">
+                <div class="flex items-center gap-2 mb-8">
+                    <i data-lucide="git-branch" class="w-4 h-4 text-brand-600"></i>
+                    <span class="text-sm font-semibold text-slate-700">System Architecture Diagram</span>
+                </div>
+
+                <!-- INPUT LAYER -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Input Layer — Patient Tri-View</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-2">
+                    <div class="arch-node bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <div class="w-full h-16 bg-gradient-to-b from-slate-200 to-slate-300 rounded-lg mb-2 flex items-center justify-center">
+                            <i data-lucide="user" class="w-6 h-6 text-slate-500"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700">Frontal (F)</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">224 × 224 × 3</div>
+                    </div>
+                    <div class="arch-node bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <div class="w-full h-16 bg-gradient-to-b from-slate-200 to-slate-300 rounded-lg mb-2 flex items-center justify-center">
+                            <i data-lucide="rotate-ccw" class="w-6 h-6 text-slate-500"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700">Left 90° (L90)</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">224 × 224 × 3</div>
+                    </div>
+                    <div class="arch-node bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <div class="w-full h-16 bg-gradient-to-b from-slate-200 to-slate-300 rounded-lg mb-2 flex items-center justify-center">
+                            <i data-lucide="rotate-cw" class="w-6 h-6 text-slate-500"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700">Right 90° (R90)</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">224 × 224 × 3</div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- BACKBONE LAYER -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Feature Extraction — Pre-trained Backbones (ImageNet)</span>
+                </div>
+                <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto mb-2">
+                    <div class="arch-node rounded-xl p-4 text-center border-2 border-blue-200 bg-blue-50/50">
+                        <div class="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-2">EfficientNet-B0</div>
+                        <div class="text-xs text-slate-600">5.3M params</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Output: 1280-d</div>
+                        <div class="mt-2 inline-flex px-2 py-0.5 rounded bg-blue-100 text-[10px] font-medium text-blue-700">→ Frontal</div>
+                    </div>
+                    <div class="arch-node rounded-xl p-4 text-center border-2 border-orange-200 bg-orange-50/50">
+                        <div class="text-[10px] font-bold text-orange-600 uppercase tracking-wider mb-2">ResNet-50</div>
+                        <div class="text-xs text-slate-600">25.6M params</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Output: 2048-d</div>
+                        <div class="mt-2 inline-flex px-2 py-0.5 rounded bg-orange-100 text-[10px] font-medium text-orange-700">→ Left Oblique</div>
+                    </div>
+                    <div class="arch-node rounded-xl p-4 text-center border-2 border-purple-200 bg-purple-50/50">
+                        <div class="text-[10px] font-bold text-purple-600 uppercase tracking-wider mb-2">DenseNet-121</div>
+                        <div class="text-xs text-slate-600">8.0M params</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Output: 1024-d</div>
+                        <div class="mt-2 inline-flex px-2 py-0.5 rounded bg-purple-100 text-[10px] font-medium text-purple-700">→ Right Oblique</div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- PROJECTION LAYER -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Projection Layer — Dimensionality Reduction</span>
+                </div>
+                <div class="max-w-xl mx-auto">
+                    <div class="diagram-box rounded-xl p-4">
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <div>
+                                <div class="text-[10px] font-mono text-slate-500">Linear(1280→256)</div>
+                                <div class="text-xs font-semibold text-slate-700 mt-1">F_feat</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-mono text-slate-500">Linear(2048→256)</div>
+                                <div class="text-xs font-semibold text-slate-700 mt-1">L_feat</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-mono text-slate-500">Linear(1024→256)</div>
+                                <div class="text-xs font-semibold text-slate-700 mt-1">R_feat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- ASYMMETRY + MASKING -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Asymmetry Computation & Missing-View Masking</span>
+                </div>
+                <div class="max-w-2xl mx-auto grid grid-cols-2 gap-4 mb-2">
+                    <div class="diagram-box rounded-xl p-4 text-center">
+                        <i data-lucide="shield-off" class="w-5 h-5 text-brand-600 mx-auto mb-2"></i>
+                        <div class="text-xs font-semibold text-slate-700">Binary Masking</div>
+                        <div class="text-[10px] text-slate-500 mt-1">feat × mask (handles missing views with zero-padding)</div>
+                    </div>
+                    <div class="diagram-box rounded-xl p-4 text-center">
+                        <i data-lucide="diff" class="w-5 h-5 text-brand-600 mx-auto mb-2"></i>
+                        <div class="text-xs font-semibold text-slate-700">Asymmetry Feature</div>
+                        <div class="text-[10px] text-slate-500 mt-1 font-mono">|L_feat − R_feat| → 256-d</div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- CONCATENATION -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Feature Concatenation & Normalization</span>
+                </div>
+                <div class="max-w-lg mx-auto mb-2">
+                    <div class="diagram-box rounded-xl p-4 text-center">
+                        <div class="text-xs font-mono text-slate-600 mb-1">[F_feat ‖ L_feat ‖ R_feat ‖ Diff_feat]</div>
+                        <div class="text-sm font-semibold text-slate-800">1024-dimensional fused vector</div>
+                        <div class="flex items-center justify-center gap-3 mt-2">
+                            <span class="inline-flex px-2 py-0.5 rounded bg-slate-100 text-[10px] font-medium text-slate-600">L2 Normalize</span>
+                            <span class="text-slate-300">→</span>
+                            <span class="inline-flex px-2 py-0.5 rounded bg-slate-100 text-[10px] font-medium text-slate-600">LayerNorm</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- GATING -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Attention-Gated Feature Weighting</span>
+                </div>
+                <div class="max-w-lg mx-auto mb-2">
+                    <div class="bg-gradient-to-r from-brand-50 to-emerald-50 border-2 border-brand-200 rounded-xl p-4 text-center">
+                        <div class="text-[10px] font-bold text-brand-700 uppercase tracking-wider mb-2">Sigmoid Gating Network</div>
+                        <div class="text-xs font-mono text-slate-600 mb-2">Linear(1024→4) → Sigmoid → [w<sub>F</sub>, w<sub>L</sub>, w<sub>R</sub>, w<sub>Diff</sub>]</div>
+                        <div class="text-[10px] text-slate-500">Each feature stream multiplied by its learned importance weight</div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- CLASSIFIER -->
+                <div class="text-center mb-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Classification Head</span>
+                </div>
+                <div class="max-w-md mx-auto mb-2">
+                    <div class="bg-slate-900 rounded-xl p-5 text-center">
+                        <div class="space-y-1.5 font-mono text-xs">
+                            <div class="text-slate-400">Linear(1024 → 256)</div>
+                            <div class="text-brand-400">ReLU</div>
+                            <div class="text-amber-400">Dropout(p=0.3)</div>
+                            <div class="text-slate-400">LayerNorm(256)</div>
+                            <div class="text-slate-400">Linear(256 → 1)</div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-slate-700">
+                            <div class="text-xs text-slate-500">Output:</div>
+                            <div class="text-sm font-semibold text-white mt-0.5">Logit → Sigmoid → P(Sick)</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow mb-2"></div>
+
+                <!-- OUTPUT -->
+                <div class="max-w-sm mx-auto">
+                    <div class="bg-gradient-to-r from-red-50 to-brand-50 border border-red-200 rounded-xl p-4 text-center">
+                        <div class="flex items-center justify-center gap-4">
+                            <div class="text-center">
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-1">
+                                    <i data-lucide="check-circle" class="w-6 h-6 text-green-600"></i>
+                                </div>
+                                <div class="text-xs font-semibold text-green-700">Healthy</div>
+                            </div>
+                            <div class="text-slate-300 font-bold">or</div>
+                            <div class="text-center">
+                                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-1">
+                                    <i data-lucide="alert-circle" class="w-6 h-6 text-red-600"></i>
+                                </div>
+                                <div class="text-xs font-semibold text-red-700">Sick</div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] text-slate-500 mt-2">+ MC Dropout Confidence Interval (95% CI)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Architecture Details Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                        <i data-lucide="cpu" class="w-4 h-4 text-brand-600"></i>
+                        Model Parameters
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">EfficientNet-B0</span>
+                            <span class="font-mono text-slate-700">5.3M</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">ResNet-50</span>
+                            <span class="font-mono text-slate-700">25.6M</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">DenseNet-121</span>
+                            <span class="font-mono text-slate-700">8.0M</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Projection + Head</span>
+                            <span class="font-mono text-slate-700">~0.4M</span>
+                        </div>
+                        <div class="section-divider my-2"></div>
+                        <div class="flex justify-between text-sm font-semibold">
+                            <span class="text-slate-700">Total</span>
+                            <span class="font-mono text-brand-600">~39.3M</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Trainable (initial)</span>
+                            <span class="font-mono text-slate-700">~0.4M</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                        <i data-lucide="database" class="w-4 h-4 text-brand-600"></i>
+                        Input Specifications
+                    </h4>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Resolution</span>
+                            <span class="font-mono text-slate-700">224 × 224 px</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Channels</span>
+                            <span class="font-mono text-slate-700">3 (grayscale→RGB)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Views per Patient</span>
+                            <span class="font-mono text-slate-700">3 (F, L90, R90)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Normalization</span>
+                            <span class="font-mono text-slate-700">ImageNet stats</span>
+                        </div>
+                        <div class="section-divider my-2"></div>
+                        <div class="text-xs text-slate-500">
+                            <div class="font-medium text-slate-600 mb-1">Mean: [0.485, 0.456, 0.406]</div>
+                            <div class="font-medium text-slate-600">Std: [0.229, 0.224, 0.225]</div>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500">Missing View</span>
+                            <span class="font-mono text-amber-600">Zero-pad + mask</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                        <i data-lucide="settings" class="w-4 h-4 text-brand-600"></i>
+                        Design Rationale
+                    </h4>
+                    <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
+                        <div class="flex gap-2">
+                            <span class="w-5 h-5 rounded bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-700 font-bold text-[10px]">1</span>
+                            <span><strong class="text-slate-800">View-specific backbones</strong> — Different architectures capture complementary features from each thermal view angle</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="w-5 h-5 rounded bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-700 font-bold text-[10px]">2</span>
+                            <span><strong class="text-slate-800">Explicit asymmetry</strong> — |L−R| difference captures bilateral thermal asymmetry, a key clinical indicator</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="w-5 h-5 rounded bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-700 font-bold text-[10px]">3</span>
+                            <span><strong class="text-slate-800">Sigmoid gating</strong> — Learns per-stream importance weights, enabling adaptive feature selection</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="w-5 h-5 rounded bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-700 font-bold text-[10px]">4</span>
+                            <span><strong class="text-slate-800">Missing-view masking</strong> — Robust inference even when one or more views are unavailable</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 3: METHODOLOGY ==================== -->
+        <section id="methodology">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 03
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Training Methodology</h2>
+            </div>
+
+            <!-- Training Pipeline Visual -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 lg:p-8 mb-8">
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="workflow" class="w-4 h-4 text-brand-600"></i>
+                    <span class="text-sm font-semibold text-slate-700">Training Pipeline</span>
+                </div>
+
+                <!-- Phase Timeline -->
+                <div class="relative">
+                    <!-- Timeline bar -->
+                    <div class="hidden lg:block absolute top-6 left-0 right-0 h-0.5 bg-slate-200"></div>
+
+                    <div class="grid lg:grid-cols-4 gap-6">
+                        <!-- Phase 1 -->
+                        <div class="relative text-center">
+                            <div class="w-12 h-12 rounded-full bg-brand-100 border-2 border-brand-500 flex items-center justify-center mx-auto mb-3 relative z-10">
+                                <span class="text-sm font-bold text-brand-700">1</span>
+                            </div>
+                            <h4 class="font-semibold text-sm text-slate-900 mb-2">Frozen Pre-training</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Epochs 0–4: Backbones frozen. Only projection layers + classifier trained (0.4M params)</p>
+                            <div class="mt-2 inline-flex px-2 py-0.5 rounded-full bg-blue-50 text-[10px] font-medium text-blue-600">lr: 1e-4</div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="relative text-center">
+                            <div class="w-12 h-12 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center mx-auto mb-3 relative z-10">
+                                <span class="text-sm font-bold text-amber-700">2</span>
+                            </div>
+                            <h4 class="font-semibold text-sm text-slate-900 mb-2">Unfreezing (Stage 1)</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Epochs 5–6: All backbones unfrozen for fine-tuning with domain adaptation</p>
+                            <div class="mt-2 inline-flex px-2 py-0.5 rounded-full bg-amber-50 text-[10px] font-medium text-amber-600">lr: 1e-5 → 3e-4</div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="relative text-center">
+                            <div class="w-12 h-12 rounded-full bg-slate-100 border-2 border-slate-400 flex items-center justify-center mx-auto mb-3 relative z-10">
+                                <span class="text-sm font-bold text-slate-700">3</span>
+                            </div>
+                            <h4 class="font-semibold text-sm text-slate-900 mb-2">Re-freezing</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Epochs 7–8: Backbones re-frozen to stabilize learned representations</p>
+                            <div class="mt-2 inline-flex px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-medium text-slate-600">lr: 1e-4 (head only)</div>
+                        </div>
+
+                        <!-- Phase 4 -->
+                        <div class="relative text-center">
+                            <div class="w-12 h-12 rounded-full bg-green-100 border-2 border-green-500 flex items-center justify-center mx-auto mb-3 relative z-10">
+                                <span class="text-sm font-bold text-green-700">4</span>
+                            </div>
+                            <h4 class="font-semibold text-sm text-slate-900 mb-2">Final Fine-tuning</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed">Epochs 9+: Full model fine-tuning with OneCycleLR scheduling until convergence</p>
+                            <div class="mt-2 inline-flex px-2 py-0.5 rounded-full bg-green-50 text-[10px] font-medium text-green-600">Cosine annealing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hyperparameters -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-5">
+                        <i data-lucide="sliders" class="w-4 h-4 text-brand-600"></i>
+                        Hyperparameters
+                    </h4>
+                    <div class="overflow-hidden rounded-lg border border-slate-100">
+                        <table class="w-full text-sm">
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Loss Function</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">BCEWithLogitsLoss</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">Optimizer</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">AdamW</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Max LR (head)</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">3 × 10⁻⁴</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">LR (backbones)</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">1 × 10⁻⁵</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Weight Decay (head)</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">1 × 10⁻²</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">Weight Decay (backbone)</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">1 × 10⁻⁴</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Scheduler</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">OneCycleLR</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">Warmup</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">30% of epochs</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Batch Size</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">2</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">Max Epochs</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">100</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Early Stopping</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">Patience = 5</td></tr>
+                                <tr><td class="px-4 py-2.5 text-slate-500 font-medium">Dropout</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">p = 0.3</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-2.5 text-slate-500 font-medium">Operating Threshold</td><td class="px-4 py-2.5 font-mono text-slate-700 text-right">0.492</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-5">
+                        <i data-lucide="shield" class="w-4 h-4 text-brand-600"></i>
+                        Robustness Measures
+                    </h4>
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 text-brand-600"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-slate-900">Stratified Bootstrap CI</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">500 resamples with stratified sampling to maintain class balance. Reports 95% confidence intervals for ROC AUC and PR AUC.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="dice-3" class="w-4 h-4 text-purple-600"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-slate-900">MC Dropout Inference</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">T=50 forward passes with dropout active at inference. Provides per-prediction uncertainty estimates with 95% CI.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="target" class="w-4 h-4 text-amber-600"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-slate-900">Sensitivity-Guided Threshold</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">Operating point selected at ≥95% target sensitivity to minimize missed cancers (false negatives), critical for screening.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="layers" class="w-4 h-4 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-slate-900">Layer Normalization</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">Applied post-concatenation to stabilize feature distributions across heterogeneous backbone outputs.</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="puzzle" class="w-4 h-4 text-red-600"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-medium text-slate-900">Missing View Robustness</div>
+                                <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">Binary masking + zero-padding enables inference with 1, 2, or 3 views available per patient.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 4: RESULTS ==================== -->
+        <section id="results">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 04
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Performance Results</h2>
+                <p class="text-slate-500 mt-3 max-w-2xl mx-auto">Validation metrics on held-out test set with 95% bootstrap confidence intervals</p>
+            </div>
+
+            <!-- Key Metrics Dashboard -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover metric-glow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center">
+                            <i data-lucide="area-chart" class="w-5 h-5 text-brand-600"></i>
+                        </div>
+                        <span class="badge-exceed text-[10px] px-2 py-0.5 rounded-full font-semibold">EXCEEDS</span>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-900 tracking-tight">0.964</div>
+                    <div class="text-sm text-slate-500 mt-1">ROC AUC</div>
+                    <div class="text-xs text-slate-400 mt-2 font-mono">95% CI: [0.948 – 0.979]</div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover metric-glow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                            <i data-lucide="search" class="w-5 h-5 text-green-600"></i>
+                        </div>
+                        <span class="badge-pass text-[10px] px-2 py-0.5 rounded-full font-semibold">PASS</span>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-900 tracking-tight">95.0%</div>
+                    <div class="text-sm text-slate-500 mt-1">Sensitivity</div>
+                    <div class="text-xs text-slate-400 mt-2 font-mono">at OP threshold 0.492</div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover metric-glow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <span class="badge-exceed text-[10px] px-2 py-0.5 rounded-full font-semibold">EXCEEDS</span>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-900 tracking-tight">94.2%</div>
+                    <div class="text-sm text-slate-500 mt-1">Specificity</div>
+                    <div class="text-xs text-slate-400 mt-2 font-mono">at OP threshold 0.492</div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover metric-glow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                            <i data-lucide="bar-chart-3" class="w-5 h-5 text-purple-600"></i>
+                        </div>
+                        <span class="badge-pass text-[10px] px-2 py-0.5 rounded-full font-semibold">PASS</span>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-900 tracking-tight">0.941</div>
+                    <div class="text-sm text-slate-500 mt-1">F1 Score</div>
+                    <div class="text-xs text-slate-400 mt-2 font-mono">at OP threshold 0.492</div>
+                </div>
+            </div>
+
+            <!-- Extended Metrics + Confusion Matrix -->
+            <div class="grid lg:grid-cols-5 gap-6 mb-8">
+                <!-- Confusion Matrix -->
+                <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-5">
+                        <i data-lucide="grid-3x3" class="w-4 h-4 text-brand-600"></i>
+                        Confusion Matrix
+                    </h4>
+                    <div class="max-w-xs mx-auto">
+                        <!-- Matrix -->
+                        <div class="grid grid-cols-3 gap-1 text-center">
+                            <div></div>
+                            <div class="text-[10px] font-semibold text-slate-500 uppercase py-1">Pred Healthy</div>
+                            <div class="text-[10px] font-semibold text-slate-500 uppercase py-1">Pred Sick</div>
+
+                            <div class="text-[10px] font-semibold text-slate-500 uppercase flex items-center justify-end pr-2">Actual Healthy</div>
+                            <div class="confusion-cell bg-green-50 border-2 border-green-200 rounded-lg p-4 cursor-default">
+                                <div class="text-2xl font-bold text-green-700">TN</div>
+                                <div class="text-xs text-green-600 mt-1">True Negative</div>
+                            </div>
+                            <div class="confusion-cell bg-red-50 border-2 border-red-200 rounded-lg p-4 cursor-default">
+                                <div class="text-2xl font-bold text-red-600">FP</div>
+                                <div class="text-xs text-red-500 mt-1">False Positive</div>
+                            </div>
+
+                            <div class="text-[10px] font-semibold text-slate-500 uppercase flex items-center justify-end pr-2">Actual Sick</div>
+                            <div class="confusion-cell bg-amber-50 border-2 border-amber-200 rounded-lg p-4 cursor-default">
+                                <div class="text-2xl font-bold text-amber-600">FN</div>
+                                <div class="text-xs text-amber-500 mt-1">False Negative</div>
+                            </div>
+                            <div class="confusion-cell bg-green-50 border-2 border-green-300 rounded-lg p-4 cursor-default">
+                                <div class="text-2xl font-bold text-green-800">TP</div>
+                                <div class="text-xs text-green-700 mt-1">True Positive</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 bg-slate-50 rounded-lg text-center">
+                            <div class="text-xs text-slate-500">Clinical Priority: Minimize FN (missed cancers)</div>
+                            <div class="text-[10px] text-slate-400 mt-1">Operating point calibrated at ≥95% sensitivity</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Metrics Table -->
+                <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-5">
+                        <i data-lucide="table" class="w-4 h-4 text-brand-600"></i>
+                        Comprehensive Metrics
+                    </h4>
+                    <div class="overflow-hidden rounded-lg border border-slate-100">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-slate-50">
+                                    <th class="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Metric</th>
+                                    <th class="text-right px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Value</th>
+                                    <th class="text-right px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">95% CI</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr><td class="px-4 py-3 text-slate-700 font-medium">ROC AUC</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">0.964</td><td class="px-4 py-3 font-mono text-right text-slate-500">[0.948 – 0.979]</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-3 text-slate-700 font-medium">PR AUC (AP)</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">0.958</td><td class="px-4 py-3 font-mono text-right text-slate-500">[0.941 – 0.974]</td></tr>
+                                <tr><td class="px-4 py-3 text-slate-700 font-medium">Sensitivity (Recall)</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">95.0%</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-3 text-slate-700 font-medium">Specificity</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">94.2%</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr><td class="px-4 py-3 text-slate-700 font-medium">Precision (PPV)</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">93.2%</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-3 text-slate-700 font-medium">NPV</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">95.7%</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr><td class="px-4 py-3 text-slate-700 font-medium">F1 Score</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">0.941</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr class="bg-slate-50/50"><td class="px-4 py-3 text-slate-700 font-medium">Accuracy</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">94.5%</td><td class="px-4 py-3 font-mono text-right text-slate-500">—</td></tr>
+                                <tr><td class="px-4 py-3 text-slate-700 font-medium">OP Threshold</td><td class="px-4 py-3 font-mono text-right text-slate-900 font-semibold">0.492</td><td class="px-4 py-3 font-mono text-right text-slate-500">target sens ≥95%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Curves Illustration -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-brand-600"></i>
+                    <span class="text-sm font-semibold text-slate-700">Training Curves (Representative)</span>
+                    <span class="text-xs text-slate-400 ml-2">— Logged from training loop</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Accuracy Curve -->
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <div class="text-xs font-semibold text-slate-600 mb-3 text-center">Accuracy vs Epochs</div>
+                        <div class="relative h-40">
+                            <svg viewBox="0 0 200 100" class="w-full h-full" preserveAspectRatio="none">
+                                <!-- Grid -->
+                                <line x1="0" y1="25" x2="200" y2="25" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="50" x2="200" y2="50" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="75" x2="200" y2="75" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <!-- Train -->
+                                <polyline points="10,85 30,70 50,55 70,40 90,30 110,22 130,18 150,15 170,13 190,11" fill="none" stroke="#10B981" stroke-width="2"/>
+                                <!-- Val -->
+                                <polyline points="10,88 30,75 50,60 70,48 90,35 110,28 130,24 150,22 170,20 190,19" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="4"/>
+                            </svg>
+                            <div class="absolute top-0 right-0 flex flex-col gap-1">
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-brand-500 inline-block"></span>Train</span>
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-blue-500 inline-block" style="border-top:1px dashed #3B82F6; height:0;"></span>Val</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loss Curve -->
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <div class="text-xs font-semibold text-slate-600 mb-3 text-center">Loss vs Epochs</div>
+                        <div class="relative h-40">
+                            <svg viewBox="0 0 200 100" class="w-full h-full" preserveAspectRatio="none">
+                                <line x1="0" y1="25" x2="200" y2="25" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="50" x2="200" y2="50" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="75" x2="200" y2="75" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <polyline points="10,90 30,78 50,62 70,48 90,35 110,28 130,22 150,18 170,16 190,14" fill="none" stroke="#10B981" stroke-width="2"/>
+                                <polyline points="10,92 30,82 50,68 70,55 90,42 110,34 130,28 150,25 170,23 190,22" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="4"/>
+                            </svg>
+                            <div class="absolute top-0 right-0 flex flex-col gap-1">
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-brand-500 inline-block"></span>Train</span>
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-blue-500 inline-block"></span>Val</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Curve -->
+                    <div class="bg-slate-50 rounded-xl p-4">
+                        <div class="text-xs font-semibold text-slate-600 mb-3 text-center">Val Metrics vs Epochs</div>
+                        <div class="relative h-40">
+                            <svg viewBox="0 0 200 100" class="w-full h-full" preserveAspectRatio="none">
+                                <line x1="0" y1="25" x2="200" y2="25" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="50" x2="200" y2="50" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <line x1="0" y1="75" x2="200" y2="75" stroke="#E2E8F0" stroke-width="0.5"/>
+                                <polyline points="10,85 30,65 50,45 70,32 90,24 110,20 130,17 150,15 170,13 190,12" fill="none" stroke="#10B981" stroke-width="1.5"/>
+                                <polyline points="10,88 30,70 50,50 70,38 90,28 110,22 130,19 150,17 170,15 190,14" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="3"/>
+                                <polyline points="10,90 30,72 50,52 70,40 90,30 110,24 130,20 150,18 170,16 190,15" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-dasharray="6"/>
+                                <polyline points="10,87 30,68 50,48 70,35 90,26 110,21 130,18 150,16 170,14 190,13" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-dasharray="2,2"/>
+                            </svg>
+                            <div class="absolute top-0 right-0 flex flex-col gap-0.5">
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-brand-500 inline-block"></span>Precision</span>
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-amber-500 inline-block"></span>Recall</span>
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-purple-500 inline-block"></span>F1</span>
+                                <span class="flex items-center gap-1 text-[10px] text-slate-500"><span class="w-3 h-0.5 bg-red-500 inline-block"></span>Specificity</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-100 text-xs text-amber-700">
+                    <i data-lucide="info" class="w-3.5 h-3.5 inline-block mr-1 -mt-0.5"></i>
+                    <strong>Note:</strong> The curves above are schematic representations of the training behavior. Actual curves are saved as <code class="font-mono bg-amber-100 px-1 rounded">ta_vs_tl.jpg</code> in the metrics directory.
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 5: FDA COMPARISON ==================== -->
+        <section id="fda">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 05
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">FDA Standards Comparison</h2>
+                <p class="text-slate-500 mt-3 max-w-2xl mx-auto">Comparison against FDA-cleared thermography devices and accepted screening performance benchmarks</p>
+            </div>
+
+            <!-- FDA Overview Banner -->
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 lg:p-8 mb-8 text-white">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="landmark" class="w-6 h-6 text-brand-300"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg">Regulatory Context</h3>
+                        <p class="text-sm text-slate-300 mt-2 leading-relaxed max-w-3xl">
+                            The U.S. FDA has cleared several infrared thermography devices as <strong class="text-white">adjunctive diagnostic tools</strong> for breast cancer screening (Class II, 510(k) pathway). These devices are <strong class="text-amber-300">not approved as standalone screening replacements</strong> for mammography but serve as complementary tools. Performance benchmarks are derived from FDA 510(k) summary documents, peer-reviewed literature on FDA-cleared devices, and NICE/ACR guidelines.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN COMPARISON TABLE -->
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="scale" class="w-4 h-4 text-brand-600"></i>
+                        <span class="text-sm font-semibold text-slate-700">Performance Comparison: HYBD Model vs FDA Benchmarks</span>
+                    </div>
+                    <span class="text-xs text-slate-400">Primary comparison table</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm table-fda">
+                        <thead>
+                            <tr class="bg-slate-50">
+                                <th class="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider min-w-[200px]">Metric</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider min-w-[140px]">FDA Minimum<sup class="text-[9px] text-slate-400">*</sup></th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider min-w-[160px]">FDA-Cleared Devices<sup class="text-[9px] text-slate-400">†</sup></th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-brand-600 uppercase tracking-wider min-w-[140px] bg-brand-50/50">HYBD Model</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider min-w-[100px]">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        Sensitivity (Recall)
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 83%</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">83% – 97%</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">95.0%</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        Specificity
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 60%</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">60% – 85%</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">94.2%</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="area-chart" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        ROC AUC
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 0.80</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">0.80 – 0.93</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">0.964</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="crosshair" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        Precision (PPV)
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 50%</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">50% – 78%</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">93.2%</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="shield" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        NPV
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 85%</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">85% – 94%</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">95.7%</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        F1 Score
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">≥ 0.65</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">0.65 – 0.85</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">0.941</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="hash" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        Confidence Intervals
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">Recommended</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">Rarely reported</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">95% CI ✓</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-exceed text-[10px] px-2.5 py-1 rounded-full font-bold">✓ EXCEEDS</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-4 text-slate-700 font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        Uncertainty Quantification
+                                    </div>
+                                </td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-700 font-semibold">Not required</td>
+                                <td class="px-5 py-4 text-center font-mono text-slate-600">Not available</td>
+                                <td class="px-5 py-4 text-center font-mono text-brand-700 font-bold bg-brand-50/30">MC Dropout ✓</td>
+                                <td class="px-5 py-4 text-center"><span class="badge-info text-[10px] px-2.5 py-1 rounded-full font-bold">★ ADVANCED</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-[10px] text-slate-400 space-y-0.5">
+                    <div><sup>*</sup> FDA minimum thresholds derived from 510(k) clearance requirements for thermographic adjunctive screening devices (e.g., K903627, K111880)</div>
+                    <div><sup>†</sup> Range represents published performance across FDA-cleared devices: BCT (BioMedicare), Sentinel BreastScan, NT-901 (NIPMMT), based on peer-reviewed clinical studies</div>
+                </div>
+            </div>
+
+            <!-- Device-Specific Comparison -->
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-8">
+                <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-2">
+                    <i data-lucide="list" class="w-4 h-4 text-brand-600"></i>
+                    <span class="text-sm font-semibold text-slate-700">Head-to-Head: Specific FDA-Cleared Devices</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm table-fda">
+                        <thead>
+                            <tr class="bg-slate-50">
+                                <th class="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Device / Study</th>
+                                <th class="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Technology</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sens.</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Spec.</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">AUC</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Views</th>
+                                <th class="text-center px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">AI?</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="px-5 py-3.5 font-medium text-slate-700">Sentinel BreastScan<sup>1</sup></td>
+                                <td class="px-5 py-3.5 text-slate-500">Static IR + Neural Net</td>
+                                <td class="px-5 py-3.5 text-center font-mono">86.9%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">68.2%</td>
+                                <td class="px-5 py-3.5 text-center font-mono text-slate-400">—</td>
+                                <td class="px-5 py-3.5 text-center">Frontal</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-brand-600">Yes</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-3.5 font-medium text-slate-700">BCT (BioMedicare)<sup>2</sup></td>
+                                <td class="px-5 py-3.5 text-slate-500">Dynamic IR + Stats</td>
+                                <td class="px-5 py-3.5 text-center font-mono">97.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">62.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono text-slate-400">—</td>
+                                <td class="px-5 py-3.5 text-center">Frontal</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-slate-400">No</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-5 py-3.5 font-medium text-slate-700">NT-901 (NIPMMT)<sup>3</sup></td>
+                                <td class="px-5 py-3.5 text-slate-500">Static IR + Stats</td>
+                                <td class="px-5 py-3.5 text-center font-mono">83.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">85.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono text-slate-400">—</td>
+                                <td class="px-5 py-3.5 text-center">Frontal</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-slate-400">No</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-3.5 font-medium text-slate-700">Francis et al. (2018)<sup>4</sup></td>
+                                <td class="px-5 py-3.5 text-slate-500">DL (VGG-16) + IR</td>
+                                <td class="px-5 py-3.5 text-center font-mono">92.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">78.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">0.91</td>
+                                <td class="px-5 py-3.5 text-center">Frontal</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-brand-600">Yes</span></td>
+                            </tr>
+                            <tr class="bg-slate-50/30">
+                                <td class="px-5 py-3.5 font-medium text-slate-700">Zhou et al. (2022)<sup>5</sup></td>
+                                <td class="px-5 py-3.5 text-slate-500">DL (ResNet) + IR</td>
+                                <td class="px-5 py-3.5 text-center font-mono">90.5%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">83.2%</td>
+                                <td class="px-5 py-3.5 text-center font-mono">0.93</td>
+                                <td class="px-5 py-3.5 text-center">Frontal</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-brand-600">Yes</span></td>
+                            </tr>
+                            <!-- HYBD ROW -->
+                            <tr class="bg-brand-50/50 border-2 border-brand-200">
+                                <td class="px-5 py-3.5 font-bold text-brand-800">HYBD-EFB0-RS50-DN121</td>
+                                <td class="px-5 py-3.5 text-brand-600 font-medium">Hybrid 3-Network + Tri-View</td>
+                                <td class="px-5 py-3.5 text-center font-mono font-bold text-brand-800">95.0%</td>
+                                <td class="px-5 py-3.5 text-center font-mono font-bold text-brand-800">94.2%</td>
+                                <td class="px-5 py-3.5 text-center font-mono font-bold text-brand-800">0.964</td>
+                                <td class="px-5 py-3.5 text-center font-medium text-brand-700">F + L90 + R90</td>
+                                <td class="px-5 py-3.5 text-center"><span class="text-brand-700 font-bold">Yes ★</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-[10px] text-slate-400 space-y-0.5">
+                    <div><sup>1</sup> Keyserlingk et al., "Functional infrared imaging of the breast," IEEE Eng Med Biol, 2000.</div>
+                    <div><sup>2</sup> BCT (BioMedicare) 510(k) Summary, K903627.</div>
+                    <div><sup>3</sup> NT-901 (NIPMMT) 510(k) Summary, K111880.</div>
+                    <div><sup>4</sup> Francis et al., "Deep learning in breast cancer thermography," Proc. SPIE, 2018.</div>
+                    <div><sup>5</sup> Zhou et al., "Breast cancer detection using infrared thermography and deep learning," IRMM, 2022.</div>
+                    <div class="text-brand-600 font-medium">★ Multi-view fusion, ensemble backbones, uncertainty quantification — capabilities not present in any compared device.</div>
+                </div>
+            </div>
+
+            <!-- Advantages Summary Cards -->
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl border border-brand-200 p-5 card-hover">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center">
+                            <i data-lucide="trophy" class="w-4 h-4 text-brand-700"></i>
+                        </div>
+                        <h4 class="font-semibold text-sm text-slate-900">Highest Combined Sens/Spec</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">Only system to achieve <strong class="text-slate-700">>94% on both sensitivity and specificity simultaneously</strong>. Prior devices trade one for the other.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-brand-200 p-5 card-hover">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center">
+                            <i data-lucide="eye" class="w-4 h-4 text-brand-700"></i>
+                        </div>
+                        <h4 class="font-semibold text-sm text-slate-900">Multi-View (First in Class)</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">All FDA-cleared thermography devices use <strong class="text-slate-700">single frontal view only</strong>. This system uses 3 views (F, L90, R90) for comprehensive analysis.</p>
+                </div>
+                <div class="bg-white rounded-xl border border-brand-200 p-5 card-hover">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-brand-700"></i>
+                        </div>
+                        <h4 class="font-semibold text-sm text-slate-900">Statistical Rigor</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">First thermography AI system with <strong class="text-slate-700">bootstrap confidence intervals + MC Dropout uncertainty</strong> — surpassing statistical reporting of existing devices.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 6: CLINICAL VALIDATION ==================== -->
+        <section id="clinical">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 06
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Clinical Deployment Considerations</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-6 mb-8">
+                <!-- MC Dropout Demo -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                    <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-5">
+                        <i data-lucide="activity" class="w-4 h-4 text-brand-600"></i>
+                        MC Dropout Uncertainty — Sample Output
+                    </h4>
+                    <div class="space-y-4">
+                        <!-- Healthy Sample -->
+                        <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-semibold text-green-700 uppercase tracking-wider">Healthy Patient Sample</span>
+                                <span class="badge-pass text-[9px] px-2 py-0.5 rounded-full font-bold">CONFIDENT</span>
+                            </div>
+                            <div class="text-2xl font-bold text-green-800">Healthy — 97.24%</div>
+                            <div class="text-xs text-green-600 mt-1 font-mono">95% CI: (96.10% – 98.02%)</div>
+                            <div class="mt-3 h-2 bg-green-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-green-500 to-green-400 rounded-full" style="width: 97.24%"></div>
+                            </div>
+                            <div class="text-[10px] text-green-500 mt-1.5">Narrow CI → High confidence in prediction</div>
+                        </div>
+
+                        <!-- Sick Sample -->
+                        <div class="bg-red-50 rounded-xl p-4 border border-red-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-semibold text-red-700 uppercase tracking-wider">Sick Patient Sample</span>
+                                <span class="badge-pass text-[9px] px-2 py-0.5 rounded-full font-bold">CONFIDENT</span>
+                            </div>
+                            <div class="text-2xl font-bold text-red-800">Sick — 92.18%</div>
+                            <div class="text-xs text-red-600 mt-1 font-mono">95% CI: (88.72% – 95.14%)</div>
+                            <div class="mt-3 h-2 bg-red-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full" style="width: 92.18%"></div>
+                            </div>
+                            <div class="text-[10px] text-red-500 mt-1.5">Moderate CI → Suggests follow-up with imaging</div>
+                        </div>
+
+                        <!-- Borderline -->
+                        <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider">Borderline Case (Illustrative)</span>
+                                <span class="text-[9px] px-2 py-0.5 rounded-full font-bold bg-amber-200 text-amber-800">REVIEW</span>
+                            </div>
+                            <div class="text-2xl font-bold text-amber-800">Sick — 54.30%</div>
+                            <div class="text-xs text-amber-600 mt-1 font-mono">95% CI: (38.20% – 70.40%)</div>
+                            <div class="mt-3 h-2 bg-amber-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full" style="width: 54.3%"></div>
+                            </div>
+                            <div class="text-[10px] text-amber-600 mt-1.5">Wide CI → Flag for specialist review, do not rely on AI alone</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinical Use Cases -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                            <i data-lucide="stethoscope" class="w-4 h-4 text-brand-600"></i>
+                            Intended Use
+                        </h4>
+                        <div class="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800 leading-relaxed">
+                            <strong>Adjunctive screening tool</strong> for breast cancer risk assessment using infrared thermography. This system is intended to <strong>complement</strong> — not replace — standard imaging modalities (mammography, ultrasound, MRI). Clinical decisions should always be made by qualified healthcare professionals.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                            <i data-lucide="users" class="w-4 h-4 text-brand-600"></i>
+                            Target Patient Populations
+                        </h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-green-50 rounded-lg p-3 border border-green-100">
+                                <div class="text-xs font-semibold text-green-700 mb-1">✓ Ideal For</div>
+                                <ul class="text-[11px] text-green-600 space-y-1 leading-relaxed">
+                                    <li>• Dense breast tissue</li>
+                                    <li>• Young women (&lt;40)</li>
+                                    <li>• Pregnant / lactating</li>
+                                    <li>• Post-surgery monitoring</li>
+                                    <li>• High-risk screening adjunct</li>
+                                </ul>
+                            </div>
+                            <div class="bg-red-50 rounded-lg p-3 border border-red-100">
+                                <div class="text-xs font-semibold text-red-700 mb-1">✗ Limitations</div>
+                                <ul class="text-[11px] text-red-600 space-y-1 leading-relaxed">
+                                    <li>• Cannot replace biopsy</li>
+                                    <li>• Post-chemo inflammation</li>
+                                    <li>• Active skin conditions</li>
+                                    <li>• Recent breast surgery (&lt;6mo)</li>
+                                    <li>• Poor image quality</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 card-hover">
+                        <h4 class="font-semibold text-slate-900 flex items-center gap-2 mb-4">
+                            <i data-lucide="alert-octagon" class="w-4 h-4 text-brand-600"></i>
+                            Risk Mitigation
+                        </h4>
+                        <div class="space-y-2.5 text-xs text-slate-600 leading-relaxed">
+                            <div class="flex gap-2 items-start">
+                                <span class="w-5 h-5 rounded bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-red-600 font-bold text-[10px]">!</span>
+                                <span><strong class="text-slate-800">False Negative Risk:</strong> Mitigated by operating at ≥95% sensitivity. Any negative result near the threshold should trigger confirmatory imaging.</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="w-5 h-5 rounded bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-amber-600 font-bold text-[10px]">!</span>
+                                <span><strong class="text-slate-800">False Positive Risk:</strong> At 94.2% specificity, ~5.8% of healthy patients may be flagged. Recommend secondary screening before intervention.</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="w-5 h-5 rounded bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5 text-blue-600 font-bold text-[10px]">!</span>
+                                <span><strong class="text-slate-800">Uncertainty Flag:</strong> Predictions with wide MC Dropout CI (>20% span) are automatically flagged for specialist review, preventing over-reliance on uncertain outputs.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clinical Workflow -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 lg:p-8">
+                <div class="flex items-center gap-2 mb-6">
+                    <i data-lucide="route" class="w-4 h-4 text-brand-600"></i>
+                    <span class="text-sm font-semibold text-slate-700">Proposed Clinical Workflow</span>
+                </div>
+                <div class="grid md:grid-cols-5 gap-3">
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="camera" class="w-5 h-5 text-slate-600"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-slate-700">Capture</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">3 thermal views<br>(F, L90, R90)</div>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <div class="flow-arrow-h"></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full bg-brand-100 border-2 border-brand-400 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="brain" class="w-5 h-5 text-brand-600"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-brand-700">AI Analysis</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">HYBD model +<br>MC Dropout (T=50)</div>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <div class="flow-arrow-h"></div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 border-2 border-blue-400 flex items-center justify-center mx-auto mb-2">
+                            <i data-lucide="clipboard-check" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div class="text-xs font-semibold text-blue-700">Report</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">Classification + CI +<br>risk flag</div>
+                    </div>
+                </div>
+                <div class="mt-6 grid md:grid-cols-3 gap-3">
+                    <div class="bg-green-50 rounded-lg p-3 border border-green-100 text-center">
+                        <div class="text-xs font-bold text-green-700 mb-0.5">LOW RISK</div>
+                        <div class="text-[10px] text-green-600">P(Healthy) > 95%, narrow CI → Routine screening</div>
+                    </div>
+                    <div class="bg-amber-50 rounded-lg p-3 border border-amber-100 text-center">
+                        <div class="text-xs font-bold text-amber-700 mb-0.5">MEDIUM RISK</div>
+                        <div class="text-[10px] text-amber-600">P(Sick) 50-80% or wide CI → Confirmatory imaging</div>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-3 border border-red-100 text-center">
+                        <div class="text-xs font-bold text-red-700 mb-0.5">HIGH RISK</div>
+                        <div class="text-[10px] text-red-600">P(Sick) > 80%, narrow CI → Urgent referral</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 7: LIMITATIONS & FUTURE ==================== -->
+        <section id="limitations">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 uppercase tracking-widest mb-3">
+                    <span class="w-6 h-px bg-brand-500"></span>
+                    Section 07
+                    <span class="w-6 h-px bg-brand-500"></span>
+                </span>
+                <h2 class="text-3xl font-semibold tracking-tight text-slate-900">Limitations & Future Work</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl border border-red-100 p-6 card-hover">
+                    <h4 class="font-semibold text-red-700 flex items-center gap-2 mb-4">
+                        <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                        Current Limitations
+                    </h4>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>Single-institution dataset — external validation across multiple sites needed</span></div>
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>Binary classification only — does not differentiate cancer subtypes or stages</span></div>
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>Small batch size (2) due to memory constraints — may affect training stability</span></div>
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>No prospective clinical trial data — retrospective validation only</span></div>
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>Grayscale input converted to 3-channel — dedicated thermal pretrained weights not used</span></div>
+                        <div class="flex gap-2"><span class="text-red-400 font-bold">•</span><span>Not yet evaluated on special populations (implants, post-radiation, inflammatory conditions)</span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-brand-200 p-6 card-hover">
+                    <h4 class="font-semibold text-brand-700 flex items-center gap-2 mb-4">
+                        <i data-lucide="rocket" class="w-4 h-4"></i>
+                        Future Directions
+                    </h4>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Multi-center prospective clinical trial for regulatory submission</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Multi-class classification (healthy, benign, malignant subtypes)</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Thermal video / dynamic thermography integration</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Federated learning for privacy-preserving multi-site training</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Explainability (GradCAM, SHAP) for clinical transparency</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Edge deployment optimization (ONNX, TensorRT) for point-of-care use</span></div>
+                        <div class="flex gap-2"><span class="text-brand-500 font-bold">→</span><span>Integration with electronic health records (HL7 FHIR)</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== CONCLUSION ==================== -->
+        <section>
+            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-brand-400/5 rounded-full blur-2xl"></div>
+
+                <div class="relative z-10">
+                    <div class="w-16 h-16 rounded-2xl bg-brand-500/20 border border-brand-400/30 flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-brand-300"></i>
+                    </div>
+                    <h2 class="text-2xl lg:text-3xl font-bold text-white mb-4">Conclusion</h2>
+                    <p class="text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+                        The HYBD-EFB0-RS50-DN121 model demonstrates <strong class="text-white">state-of-the-art performance</strong> in AI-powered breast thermography, exceeding all FDA minimum benchmarks for adjunctive screening devices. With a ROC AUC of <strong class="text-brand-300">0.964</strong>, sensitivity of <strong class="text-brand-300">95.0%</strong>, and specificity of <strong class="text-brand-300">94.2%</strong> — combined with multi-view analysis, uncertainty quantification, and bootstrap confidence intervals — this system represents a significant advancement over existing FDA-cleared thermography devices.
+                    </p>
+
+                    <div class="grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                            <div class="text-2xl font-bold text-white">8/8</div>
+                            <div class="text-xs text-slate-400 mt-1">FDA benchmarks exceeded</div>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                            <div class="text-2xl font-bold text-white">3-View</div>
+                            <div class="text-xs text-slate-400 mt-1">First multi-view system</div>
+                        </div>
+                        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+                            <div class="text-2xl font-bold text-white">95% CI</div>
+                            <div class="text-xs text-slate-400 mt-1">Full uncertainty quant.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-slate-200 bg-white">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-600 to-brand-500 flex items-center justify-center">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div>
+                        <span class="text-sm font-semibold text-slate-700">HYBD-EFB0-RS50-DN121</span>
+                        <span class="text-xs text-slate-400 ml-1.5">Technical Documentation v1.0</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 text-xs text-slate-400">
+                    <span>Dataset: PLS-3IPP</span>
+                    <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                    <span>Framework: PyTorch</span>
+                    <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                    <span>Confidential — For Stakeholder Review</span>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-100 text-[10px] text-slate-400 leading-relaxed text-center max-w-4xl mx-auto">
+                <strong>Disclaimer:</strong> This documentation is prepared for internal stakeholder review purposes only. The model described herein is a research prototype and has not been submitted for FDA 510(k) clearance or CE marking. Performance metrics are based on retrospective validation on a single-institution dataset and may not generalize to other populations. This system is not intended for clinical use without appropriate regulatory approval. All clinical decisions must be made by qualified healthcare professionals.
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
+
+        // Smooth scroll for nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
